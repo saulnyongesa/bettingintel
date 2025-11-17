@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3>Kelly Criterion Calculator</h3>
+            <p class="text-muted small">Calculate the optimal percentage of your bankroll to bet.</p>
+
+            <div class="mb-3">
+                <label>Odds (Decimal)</label>
+                <input type="number" id="odds" class="form-control" placeholder="e.g., 2.00">
+            </div>
+            <div class="mb-3">
+                <label>Win Probability (%)</label>
+                <input type="number" id="prob" class="form-control" placeholder="e.g., 55">
+            </div>
+            <button onclick="calculateKelly()" class="btn btn-primary w-100">Calculate</button>
+
+            <div id="result" class="mt-3 alert alert-success d-none"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateKelly() {
+    let odds = parseFloat(document.getElementById('odds').value);
+    let prob = parseFloat(document.getElementById('prob').value) / 100;
+    let resultBox = document.getElementById('result');
+
+    if (!odds || !prob) return;
+
+    let b = odds - 1;
+    let q = 1 - prob;
+    let f = ((b * prob) - q) / b;
+    let percentage = (f * 100).toFixed(2);
+
+    resultBox.classList.remove('d-none');
+    if (percentage > 0) {
+        resultBox.innerHTML = `You should bet <strong>${percentage}%</strong> of your bankroll.`;
+        resultBox.className = "mt-3 alert alert-success";
+    } else {
+        resultBox.innerHTML = `Do not bet. Expected value is negative.`;
+        resultBox.className = "mt-3 alert alert-danger";
+    }
+}
+</script>
+{% endblock %}
