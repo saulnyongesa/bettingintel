@@ -2,7 +2,27 @@ import threading
 from django.core.cache import cache
 from django.core.management import call_command
 from django.contrib import messages
+from django.http import HttpResponsePermanentRedirect
 
+
+class RedirectDefaultDomainMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        host = request.get_host()
+
+        # Check if it's the default Heroku domain (adjust the exact name if needed)
+        if 'herokuapp.com' in host and host != 'www.bettingintel.online':  # Replace with your exact app name
+            # Redirect to your custom domain
+            custom_domain = 'www.bettingintel.online'  # Your custom domain
+            # Build the full URL (preserve path and query params)
+            redirect_url = f'https://{custom_domain}{request.get_full_path()}'
+            return HttpResponsePermanentRedirect(redirect_url)
+
+        # If not the default domain, proceed normally
+        response = self.get_response(request)
+        return response
 
 class AutoScraperMiddleware:
     def __init__(self, get_response):
