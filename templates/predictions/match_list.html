@@ -3,140 +3,154 @@
 
 {% block title %}All Football Predictions & Betting Tips{% endblock %}
 {% block meta_description %}
-Browse daily football betting tips and predictions for all major leagues including Premier League, La Liga, and Serie A. Filter by date and league to find high-confidence bets.
+    Browse daily football betting tips and predictions for all major leagues including Premier League, La Liga, and Serie A. Filter by date and league to find high-confidence bets.
 {% endblock %}
 
 {% block meta_keywords %}
-football predictions today, soccer betting tips, all leagues predictions, bettingintel predictions, 1x2 tips
+    football predictions today, soccer betting tips, all leagues predictions, bettingintel predictions, 1x2 tips
 {% endblock %}
 
 {% block og_title %}
-⚽ All Upcoming Football Predictions - BettingIntel
+    ⚽ All Upcoming Football Predictions - BettingIntel
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
+    <div class="container">
+        <div class="row">
 
-        <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white fw-bold">📅 Date Filter</div>
-                <div class="list-group list-group-flush">
-                    <a href="?{% param_replace date='' page=1 %}" class="list-group-item list-group-item-action {% if not current_date %}active{% endif %}">All Upcoming</a>
-                    <a href="?{% param_replace date='today' page=1 %}" class="list-group-item list-group-item-action {% if current_date == 'today' %}active{% endif %}">Today's Games</a>
-                    <a href="?{% param_replace date='tomorrow' page=1 %}" class="list-group-item list-group-item-action {% if current_date == 'tomorrow' %}active{% endif %}">Tomorrow</a>
+            <div class="col-lg-3 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white fw-bold">📅 Date Filter</div>
+                    <div class="list-group list-group-flush">
+                        <a href="?{% param_replace date='' page=1 %}" class="list-group-item list-group-item-action {% if not current_date %}active{% endif %}">All Upcoming</a>
+                        <a href="?{% param_replace date='today' page=1 %}" class="list-group-item list-group-item-action {% if current_date == 'today' %}active{% endif %}">Today's Games</a>
+                        <a href="?{% param_replace date='tomorrow' page=1 %}" class="list-group-item list-group-item-action {% if current_date == 'tomorrow' %}active{% endif %}">Tomorrow</a>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-header bg-white fw-bold">🏆 Leagues</div>
+                    <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
+                        <a href="?{% param_replace league='' page=1 %}" class="list-group-item list-group-item-action {% if not current_league %}active{% endif %}">All Leagues</a>
+                        {% for league in leagues %}
+                            <a href="?{% param_replace league=league.slug page=1 %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {% if current_league == league.slug %}active{% endif %}">
+                                {{ league.name }}
+                                <span class="badge bg-secondary rounded-pill">{{ league.match_count }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mt-4 sticky-top" style="top: 20px;">
+                    <div class="bg-light border rounded p-4 text-center text-muted">
+                        <small>Ad Space</small>
+                    </div>
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm mt-3">
-                <div class="card-header bg-white fw-bold">🏆 Leagues</div>
-                <div class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
-                    <a href="?{% param_replace league='' page=1 %}" class="list-group-item list-group-item-action {% if not current_league %}active{% endif %}">All Leagues</a>
-                    {% for league in leagues %}
-                    <a href="?{% param_replace league=league.slug page=1 %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {% if current_league == league.slug %}active{% endif %}">
-                        {{ league.name }}
-                        <span class="badge bg-secondary rounded-pill">{{ league.match_count }}</span>
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
+            <div class="col-lg-9">
+                <h2 class="fw-bold mb-4">
+                    {% if current_league %}
+                        {{ current_league|title|cut:"-" }} Predictions
+                    {% else %}
+                        All Football Predictions
+                    {% endif %}
+                </h2>
 
-            <div class="mt-4 sticky-top" style="top: 20px;">
-                <div class="bg-light border rounded p-4 text-center text-muted">
-                    <small>Ad Space</small>
-                </div>
-            </div>
-        </div>
+                {% for match in matches %}
+                    {% if forloop.counter0|divisibleby:5 and not forloop.first %}
+                        <div class="mb-3 p-3 bg-light border rounded text-center text-muted">
+                            <small>Advertisement</small>
+                        </div>
+                    {% endif %}
 
-        <div class="col-lg-9">
-            <h2 class="fw-bold mb-4">
-                {% if current_league %}
-                    {{ current_league|title|cut:"-" }} Predictions
-                {% else %}
-                    All Football Predictions
-                {% endif %}
-            </h2>
+                    <div class="card border-0 shadow-sm mb-3 match-row">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center mb-2 mb-md-0">
+                                    <span class="d-block fw-bold text-dark">{{ match.start_time|date:"H:i" }}</span>
+                                    <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">{{ match.league.country }}</small>
+                                </div>
 
-            {% for match in matches %}
-                {% if forloop.counter0|divisibleby:5 and not forloop.first %}
-                <div class="mb-3 p-3 bg-light border rounded text-center text-muted">
-                    <small>Advertisement</small>
-                </div>
-                {% endif %}
+                                <div class="col-md-5 text-center text-md-start mb-2 mb-md-0">
+                                    <h5 class="fw-bold mb-0">
+                                        {{ match.home_team }} <span class="text-muted fw-light">vs</span> {{ match.away_team }}
+                                    </h5>
+                                    <small class="text-primary">{{ match.league.name }}</small>
+                                </div>
 
-                <div class="card border-0 shadow-sm mb-3 match-row">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center mb-2 mb-md-0">
-                                <span class="d-block fw-bold text-dark">{{ match.start_time|date:"H:i" }}</span>
-                                <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">{{ match.league.country }}</small>
-                            </div>
+                                <div class="col-md-3 mb-2 mb-md-0">
+                                    {% with cons=match.get_consensus_data %}
+                                        {% if cons %}
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ cons.1 }}%" title="Home Win: {{ cons.1|floatformat:0 }}%"></div>
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ cons.X }}%" title="Draw: {{ cons.X|floatformat:0 }}%"></div>
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ cons.2 }}%" title="Away Win: {{ cons.2|floatformat:0 }}%"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between small text-muted mt-1" style="font-size: 0.7rem;">
+                                                <span>1: {{ cons.1|floatformat:0 }}%</span>
+                                                <span>2: {{ cons.2|floatformat:0 }}%</span>
+                                            </div>
+                                        {% else %}
+                                            <small class="text-muted fst-italic">Analyzing...</small>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
 
-                            <div class="col-md-5 text-center text-md-start mb-2 mb-md-0">
-                                <h5 class="fw-bold mb-0">
-                                    {{ match.home_team }} <span class="text-muted fw-light">vs</span> {{ match.away_team }}
-                                </h5>
-                                <small class="text-primary">{{ match.league.name }}</small>
-                            </div>
-
-                            <div class="col-md-3 mb-2 mb-md-0">
-                                {% with cons=match.get_consensus_data %}
-                                {% if cons %}
-                                    <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ cons.1 }}%" title="Home Win: {{ cons.1|floatformat:0 }}%"></div>
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ cons.X }}%" title="Draw: {{ cons.X|floatformat:0 }}%"></div>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ cons.2 }}%" title="Away Win: {{ cons.2|floatformat:0 }}%"></div>
-                                    </div>
-                                    <div class="d-flex justify-content-between small text-muted mt-1" style="font-size: 0.7rem;">
-                                        <span>1: {{ cons.1|floatformat:0 }}%</span>
-                                        <span>2: {{ cons.2|floatformat:0 }}%</span>
-                                    </div>
-                                {% else %}
-                                    <small class="text-muted fst-italic">Analyzing...</small>
-                                {% endif %}
-                                {% endwith %}
-                            </div>
-
-                            <div class="col-md-2 text-end">
-                                <a href="{{ match.get_absolute_url }}" class="btn btn-outline-primary btn-sm rounded-pill w-100">Analysis</a>
+                                <div class="col-md-2 text-end">
+                                    <a href="{{ match.get_absolute_url }}" class="btn btn-outline-primary btn-sm rounded-pill w-100">Analysis</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% empty %}
-                <div class="alert alert-info py-5 text-center">
-                    <h4>No matches found.</h4>
-                    <p>Try changing the filters or check back later.</p>
-                </div>
-            {% endfor %}
+                {% empty %}
+                    <div class="alert alert-info py-5 text-center">
+                        <h4>No matches found.</h4>
+                        <p>Try changing the filters or check back later.</p>
+                    </div>
+                {% endfor %}
 
-            {% if matches.has_other_pages %}
-            <nav aria-label="Page navigation" class="mt-5">
-                <ul class="pagination justify-content-center">
-                    {% if matches.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?{% param_replace page=matches.previous_page_number %}">&laquo; Previous</a>
-                        </li>
-                    {% endif %}
+                {% if matches.has_other_pages %}
+                    <nav aria-label="Page navigation" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if matches.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% param_replace page=matches.previous_page_number %}">&laquo; Previous</a>
+                                </li>
+                            {% endif %}
 
-                    <li class="page-item disabled"><a class="page-link">Page {{ matches.number }} of {{ matches.paginator.num_pages }}</a></li>
+                            <li class="page-item disabled"><a class="page-link">Page {{ matches.number }} of {{ matches.paginator.num_pages }}</a></li>
 
-                    {% if matches.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?{% param_replace page=matches.next_page_number %}">Next &raquo;</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
+                            {% if matches.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% param_replace page=matches.next_page_number %}">Next &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
 
+            </div>
         </div>
     </div>
-</div>
 
-<style>
-    .match-row { transition: transform 0.2s; }
-    .match-row:hover { transform: translateY(-2px); border-left: 4px solid #0d6efd !important; }
-    .list-group-item.active { background-color: #0d6efd; border-color: #0d6efd; }
-</style>
+    <style>
+        .match-row { transition: transform 0.2s; }
+        .match-row:hover { transform: translateY(-2px); border-left: 4px solid #0d6efd !important; }
+        .list-group-item.active { background-color: #0d6efd; border-color: #0d6efd; }
+    </style>
+    {% block scripts %}
+        <script>
+            (function(urzwni){
+                var d = document,
+                    s = d.createElement('script'),
+                    l = d.scripts[d.scripts.length - 1];
+                s.settings = urzwni || {};
+                s.src = "\/\/liquid-track.com\/btX.VaszdZG_lk0\/YVWncd\/keymF9\/uEZkU\/l\/kSPKTdYB3PMgDXcf1YM\/jYMOtXNOjzcFw\/NxzhUDy\/NsAI";
+                s.async = true;
+                s.referrerPolicy = 'no-referrer-when-downgrade';
+                l.parentNode.insertBefore(s, l);
+            })({})
+        </script>
+    {% endblock %}
 {% endblock %}
