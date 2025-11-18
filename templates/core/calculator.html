@@ -1,47 +1,263 @@
 {% extends 'base.html' %}
+
+{# --- 1. SEO OPTIMIZATION --- #}
+{% block title %}Free Sports Betting Tools & Calculators - BettingIntel{% endblock %}
+
+{% block meta_description %}
+Access free professional betting tools: Kelly Criterion calculator, Odds Converter (Decimal/American), and Bookmaker Margin calculator to find value bets.
+{% endblock %}
+
+{% block meta_keywords %}
+betting calculator, kelly criterion, odds converter, vig calculator, betting margin, sports betting tools
+{% endblock %}
+
+{% block og_title %}🧮 Professional Betting Tools Suite - Free{% endblock %}
+
+
+{# --- 2. MAIN CONTENT --- #}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4">
-            <h3>Kelly Criterion Calculator</h3>
-            <p class="text-muted small">Calculate the optimal percentage of your bankroll to bet.</p>
+<div class="container">
 
-            <div class="mb-3">
-                <label>Odds (Decimal)</label>
-                <input type="number" id="odds" class="form-control" placeholder="e.g., 2.00">
-            </div>
-            <div class="mb-3">
-                <label>Win Probability (%)</label>
-                <input type="number" id="prob" class="form-control" placeholder="e.g., 55">
-            </div>
-            <button onclick="calculateKelly()" class="btn btn-primary w-100">Calculate</button>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">🧮 Betting Tools Suite</h1>
+            <p class="text-muted">Professional calculators to manage risk and find value.</p>
+        </div>
+    </div>
 
-            <div id="result" class="mt-3 alert alert-success d-none"></div>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold">Select Tool</div>
+                <div class="list-group list-group-flush" id="tool-tabs" role="tablist">
+                    <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                       id="kelly-tab" data-bs-toggle="pill" href="#kelly" role="tab">
+                       <span>💰 Kelly Criterion</span>
+                       <small class="text-muted">&rsaquo;</small>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                       id="converter-tab" data-bs-toggle="pill" href="#converter" role="tab">
+                       <span>🔄 Odds Converter</span>
+                       <small class="text-muted">&rsaquo;</small>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                       id="margin-tab" data-bs-toggle="pill" href="#margin" role="tab">
+                       <span>🏦 Margin (Vig) Calc</span>
+                       <small class="text-muted">&rsaquo;</small>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-4 p-4 bg-light border rounded text-center text-muted">
+                <small>Advertisement</small>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content" id="tool-content">
+
+                <div class="tab-pane fade show active" id="kelly" role="tabpanel">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="fw-bold text-primary">Kelly Criterion Calculator</h3>
+                            <p class="text-muted small">Determines the mathematically optimal stake size to maximize growth while preventing ruin.</p>
+                            <hr>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Odds (Decimal)</label>
+                                    <input type="number" id="kelly-odds" class="form-control form-control-lg" placeholder="e.g. 2.00" step="0.01">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Win Probability (%)</label>
+                                    <input type="number" id="kelly-prob" class="form-control form-control-lg" placeholder="e.g. 55">
+                                </div>
+                                <div class="col-12">
+                                    <button onclick="calculateKelly()" class="btn btn-primary w-100 py-2 fw-bold">Calculate Stake</button>
+                                </div>
+                            </div>
+
+                            <div id="kelly-result" class="mt-4 alert alert-light border d-none text-center"></div>
+
+                            <div class="mt-4 bg-light p-3 rounded small">
+                                <strong>Why use this?</strong> The Kelly Criterion is used by pro gamblers to manage their bankroll.
+                                It suggests betting more when the "Value" is high and less when the edge is small.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="converter" role="tabpanel">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="fw-bold text-success">Odds Converter</h3>
+                            <p class="text-muted small">Convert between Decimal, American, and Implied Probability instantly.</p>
+                            <hr>
+
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Decimal (2.50)</label>
+                                    <input type="number" id="dec-odds" class="form-control" placeholder="2.50" oninput="convertFromDecimal()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">American (+150)</label>
+                                    <input type="number" id="us-odds" class="form-control" placeholder="150" oninput="convertFromAmerican()">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Implied Prob (%)</label>
+                                    <input type="number" id="prob-odds" class="form-control" placeholder="40" readonly style="background-color: #e9ecef;">
+                                </div>
+                            </div>
+
+                            <div class="mt-4 alert alert-info small">
+                                <i class="bi bi-info-circle"></i> Enter a value in either <strong>Decimal</strong> or <strong>American</strong> to auto-convert.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="margin" role="tabpanel">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="fw-bold text-danger">Bookmaker Margin (Vig) Calculator</h3>
+                            <p class="text-muted small">Calculate the "hidden fee" the bookmaker is charging on a market.</p>
+                            <hr>
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Home Odds</label>
+                                    <input type="number" id="m-home" class="form-control" placeholder="e.g. 2.50">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Draw Odds</label>
+                                    <input type="number" id="m-draw" class="form-control" placeholder="e.g. 3.20">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Away Odds</label>
+                                    <input type="number" id="m-away" class="form-control" placeholder="e.g. 2.90">
+                                </div>
+                                <div class="col-12">
+                                    <button onclick="calculateMargin()" class="btn btn-danger w-100 fw-bold">Check Margin</button>
+                                </div>
+                            </div>
+
+                            <div id="margin-result" class="mt-4 text-center d-none">
+                                <h1 class="display-4 fw-bold text-dark mb-0" id="margin-val">0%</h1>
+                                <p class="text-muted">Bookmaker Margin (Vig)</p>
+                                <div class="progress mt-2" style="height: 20px;">
+                                    <div id="margin-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small id="margin-text" class="d-block mt-2"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
+{# --- 3. JAVASCRIPT LOGIC --- #}
 <script>
-function calculateKelly() {
-    let odds = parseFloat(document.getElementById('odds').value);
-    let prob = parseFloat(document.getElementById('prob').value) / 100;
-    let resultBox = document.getElementById('result');
+    // --- KELLY CALCULATOR ---
+    function calculateKelly() {
+        let odds = parseFloat(document.getElementById('kelly-odds').value);
+        let prob = parseFloat(document.getElementById('kelly-prob').value);
+        let resultBox = document.getElementById('kelly-result');
 
-    if (!odds || !prob) return;
+        if (!odds || !prob) return;
 
-    let b = odds - 1;
-    let q = 1 - prob;
-    let f = ((b * prob) - q) / b;
-    let percentage = (f * 100).toFixed(2);
+        let decimalProb = prob / 100;
+        let b = odds - 1;
+        let q = 1 - decimalProb;
+        let f = ((b * decimalProb) - q) / b;
+        let percentage = (f * 100).toFixed(2);
 
-    resultBox.classList.remove('d-none');
-    if (percentage > 0) {
-        resultBox.innerHTML = `You should bet <strong>${percentage}%</strong> of your bankroll.`;
-        resultBox.className = "mt-3 alert alert-success";
-    } else {
-        resultBox.innerHTML = `Do not bet. Expected value is negative.`;
-        resultBox.className = "mt-3 alert alert-danger";
+        resultBox.classList.remove('d-none');
+        resultBox.classList.remove('alert-success', 'alert-danger');
+
+        if (percentage > 0) {
+            resultBox.classList.add('alert-success');
+            resultBox.innerHTML = `<h4>✅ Bet ${percentage}% of Bankroll</h4><p class="mb-0">Positive Expected Value found.</p>`;
+        } else {
+            resultBox.classList.add('alert-danger');
+            resultBox.innerHTML = `<h4>❌ Do Not Bet</h4><p class="mb-0">Negative Value. You will lose money long term.</p>`;
+        }
     }
-}
+
+    // --- ODDS CONVERTER ---
+    function convertFromDecimal() {
+        let dec = parseFloat(document.getElementById('dec-odds').value);
+        if (!dec) return;
+
+        // Prob
+        let prob = (1 / dec) * 100;
+        document.getElementById('prob-odds').value = prob.toFixed(2);
+
+        // American
+        let us;
+        if (dec >= 2) {
+            us = (dec - 1) * 100;
+            document.getElementById('us-odds').value = "+" + us.toFixed(0);
+        } else {
+            us = -100 / (dec - 1);
+            document.getElementById('us-odds').value = us.toFixed(0);
+        }
+    }
+
+    function convertFromAmerican() {
+        let us = parseFloat(document.getElementById('us-odds').value);
+        if (!us) return;
+
+        let dec;
+        if (us > 0) {
+            dec = (us / 100) + 1;
+        } else {
+            dec = (100 / Math.abs(us)) + 1;
+        }
+
+        document.getElementById('dec-odds').value = dec.toFixed(2);
+        document.getElementById('prob-odds').value = ((1 / dec) * 100).toFixed(2);
+    }
+
+    // --- MARGIN CALCULATOR ---
+    function calculateMargin() {
+        let h = parseFloat(document.getElementById('m-home').value);
+        let d = parseFloat(document.getElementById('m-draw').value);
+        let a = parseFloat(document.getElementById('m-away').value);
+
+        if(!h || !d || !a) return;
+
+        let margin = ((1/h) + (1/d) + (1/a) - 1) * 100;
+        let val = margin.toFixed(2);
+
+        document.getElementById('margin-result').classList.remove('d-none');
+        document.getElementById('margin-val').innerText = val + "%";
+
+        let bar = document.getElementById('margin-bar');
+        let text = document.getElementById('margin-text');
+
+        bar.style.width = Math.min(val * 5, 100) + "%";
+
+        if (margin < 3) {
+            bar.className = "progress-bar bg-success";
+            text.innerHTML = "Excellent! This is a low-margin (fair) market.";
+        } else if (margin < 7) {
+            bar.className = "progress-bar bg-warning";
+            text.innerHTML = "Standard bookmaker margin.";
+        } else {
+            bar.className = "progress-bar bg-danger";
+            text.innerHTML = "High Margin! Avoid betting here if possible.";
+        }
+    }
 </script>
+
+<style>
+    /* Sidebar active state style */
+    .list-group-item.active {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
 {% endblock %}

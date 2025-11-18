@@ -1,8 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ match.home_team }} vs {{ match.away_team }} Prediction - BettingIntel{% endblock %}
+{# --- 1. SEO BLOCKS (Dynamic for Google/Socials) --- #}
+{% block title %}
+    {{ match.home_team }} vs {{ match.away_team }} Prediction & Betting Tips ({{ match.start_time|date:"d M" }})
+{% endblock %}
 
+{% block meta_description %}
+    Free betting prediction for {{ match.home_team }} vs {{ match.away_team }} in {{ match.league.country }} {{ match.league.name }}.
+    Consensus: {% if consensus.1 > 50 %}Home Win{% elif consensus.2 > 50 %}Away Win{% else %}Draw{% endif %}.
+    See correct score analysis and H2H stats.
+{% endblock %}
+
+{% block meta_keywords %}
+    {{ match.home_team }} vs {{ match.away_team }} prediction, {{ match.league.name }} betting tips,
+    {{ match.home_team }} betting odds, football predictions {{ match.start_time|date:"Y" }}
+{% endblock %}
+
+{% block og_title %}
+    🔥 Prediction: {{ match.home_team }} vs {{ match.away_team }} - BettingIntel
+{% endblock %}
+
+{% block og_description %}
+    We analyzed {{ match.tips.count }} expert sources.
+    The consensus probability is:
+    Home: {{ consensus.1|floatformat:0 }}% | Draw: {{ consensus.X|floatformat:0 }}% | Away: {{ consensus.2|floatformat:0 }}%.
+    Click to see the winning tip!
+{% endblock %}
+
+
+{# --- 2. MAIN CONTENT --- #}
 {% block content %}
 <div class="container">
 
@@ -59,7 +86,7 @@
 
             <div class="p-4 mb-4 bg-light text-center border rounded text-muted" style="min-height: 100px;">
                 <small>Advertisement</small>
-                </div>
+            </div>
 
             <h4 class="fw-bold mb-3">Expert Analysis & Tips</h4>
 
@@ -99,7 +126,6 @@
                 </div>
                 {% endfor %}
             </div>
-
         </div>
 
         <div class="col-lg-4">
@@ -134,11 +160,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const ctx = document.getElementById('predictionChart');
-
-        // Data passed from Django View
         const dataValues = {{ chart_data|safe }};
-
-        // Check if we have data, otherwise show empty gray chart
         const isEmpty = dataValues.every(item => item === 0);
 
         new Chart(ctx, {
