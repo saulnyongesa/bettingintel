@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.views.decorators.http import require_GET
 
 from news.models import NewsArticle
 from predictions.models import Match
@@ -43,3 +45,27 @@ def match_detail(request, slug):
         'chart_data': chart_data
     })
 
+@require_GET
+def ads_txt(request):
+    """
+    Serves the ads.txt file for Google AdSense.
+    Replace 'pub-XXXXXXXXXXXXXXXX' with your ACTUAL AdSense Publisher ID.
+    """
+    # Standard Google format: google.com, pub-ID, DIRECT, ID
+    # You find this line in your AdSense Dashboard -> Sites -> Add Site
+    content = "google.com, pub-9012101234920620, DIRECT, f08c47fec0942fa0"
+    return HttpResponse(content, content_type="text/plain")
+
+@require_GET
+def robots_txt(request):
+    """
+    Tells Google Bots what they can and cannot crawl.
+    """
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",       # Don't look at admin
+        "Disallow: /dashboard/",   # Don't look at dashboard
+        "Allow: /",
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")

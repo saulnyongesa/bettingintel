@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-%jvyqkew1i7c%wnt&4&5ya5b!1)b9nxfg!&%*5+bf3_ktx(zas'
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'predictions.apps.PredictionsConfig',
     'dashboard.apps.DashboardConfig',
     'news.apps.NewsConfig',
+'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -102,13 +103,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Heroku Security Settings
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 
 LANGUAGE_CODE = 'en-us'
