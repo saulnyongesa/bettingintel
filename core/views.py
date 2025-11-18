@@ -47,10 +47,6 @@ def match_detail(request, slug):
 
 @require_GET
 def ads_txt(request):
-    """
-    Serves the ads.txt file for Google AdSense.
-    Replace 'pub-XXXXXXXXXXXXXXXX' with your ACTUAL AdSense Publisher ID.
-    """
     # Standard Google format: google.com, pub-ID, DIRECT, ID
     # You find this line in your AdSense Dashboard -> Sites -> Add Site
     content = "google.com, pub-9012101234920620, DIRECT, f08c47fec0942fa0"
@@ -69,3 +65,10 @@ def robots_txt(request):
         f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+@require_GET
+def hilltop_verification(request):
+    content = "206915438bf22a58bdf8"
+
+    return HttpResponse(content, content_type="text/plain")
