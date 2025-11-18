@@ -15,11 +15,13 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'www.bettingintel.online',
+    'bettingintel.online'
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'https://www.bettingintel.online',
+    'https://bettingintel.online',
 ]
 
 
@@ -54,8 +56,7 @@ ROOT_URLCONF = 'bettingintel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
