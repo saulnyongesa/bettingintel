@@ -1,132 +1,143 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
 
-    <div class="row g-4"> <div class="col-lg-8">
+        <div class="row g-4"> <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold m-0">⚽ Upcoming Predictions</h3>
                 <a href="{% url 'all_predictions' %}" class="btn btn-link text-decoration-none">View All &rarr;</a>
             </div>
 
             {% for match in matches %}
-            <div class="card border-0 shadow-sm mb-3 match-card">
-                <div class="card-body d-flex align-items-center">
+                <div class="card border-0 shadow-sm mb-3 match-card">
+                    <div class="card-body d-flex align-items-center">
 
-                    <div class="text-center bg-light rounded p-2 me-3" style="min-width: 60px;">
-                        <span class="d-block fw-bold text-dark small">{{ match.start_time|date:"H:i" }}</span>
-                        <span class="d-block text-muted" style="font-size: 0.7rem;">{{ match.start_time|date:"M d" }}</span>
-                    </div>
+                        <div class="text-center bg-light rounded p-2 me-3" style="min-width: 60px;">
+                            <span class="d-block fw-bold text-dark small">{{ match.start_time|date:"H:i" }}</span>
+                            <span class="d-block text-muted" style="font-size: 0.7rem;">{{ match.start_time|date:"M d" }}</span>
+                        </div>
 
-                    <div class="flex-grow-1">
-                        <small class="text-uppercase text-primary fw-bold" style="font-size: 0.7rem;">
-                            {{ match.league.country }} • {{ match.league.name }}
-                        </small>
-                        <h5 class="fw-bold mb-0 mt-1 text-dark">
-                            {{ match.home_team }} <span class="text-muted fw-light mx-1">vs</span> {{ match.away_team }}
-                        </h5>
-                    </div>
+                        <div class="flex-grow-1">
+                            <small class="text-uppercase text-primary fw-bold" style="font-size: 0.7rem;">
+                                {{ match.league.country }} • {{ match.league.name }}
+                            </small>
+                            <h5 class="fw-bold mb-0 mt-1 text-dark">
+                                {{ match.home_team }} <span class="text-muted fw-light mx-1">vs</span> {{ match.away_team }}
+                            </h5>
+                        </div>
 
-                    <div class="ms-3 d-none d-sm-block">
-                        <a href="{{ match.get_absolute_url }}" class="btn btn-outline-dark btn-sm rounded-pill px-4 fw-bold">
-                            Analysis
-                        </a>
-                    </div>
-                    <div class="ms-3 d-block d-sm-none">
-                        <a href="{{ match.get_absolute_url }}" class="text-dark text-decoration-none fs-4">&rsaquo;</a>
+                        <div class="ms-3 d-none d-sm-block">
+                            <a href="{{ match.get_absolute_url }}" class="btn btn-outline-dark btn-sm rounded-pill px-4 fw-bold">
+                                Analysis
+                            </a>
+                        </div>
+                        <div class="ms-3 d-block d-sm-none">
+                            <a href="{{ match.get_absolute_url }}" class="text-dark text-decoration-none fs-4">&rsaquo;</a>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% empty %}
-            <div class="text-center py-5">
-                <div class="text-muted mb-3">No upcoming matches found.</div>
-            </div>
+                <div class="text-center py-5">
+                    <div class="text-muted mb-3">No upcoming matches found.</div>
+                </div>
             {% endfor %}
         </div>
 
-        <div class="col-lg-4">
+            <div class="col-lg-4">
 
-            <div class="card bg-dark text-white border-0 shadow-sm mb-4">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold">🧮 Smart Betting Tool</h5>
-                    <p class="small text-white-50 mb-3">Don't guess. Use the Kelly Criterion to calculate your exact stake size.</p>
-                    <a href="{% url 'tools' %}" class="btn btn-success w-100 fw-bold">Open Calculator</a>
-                </div>
-            </div>
-
-            <div class="card border-0 bg-light mb-4 d-flex align-items-center justify-content-center text-muted" style="height: 250px;">
-                <small>Advertisement Space</small>
-            </div>
-
-            <div class="list-group shadow-sm border-0">
-                <div class="list-group-item border-0 bg-white fw-bold">
-                    Top Leagues Covered
-                </div>
-                <div class="list-group-item border-0 bg-light d-flex justify-content-between align-items-center">
-                    Premier League <span class="badge bg-secondary rounded-pill">UK</span>
-                </div>
-                <div class="list-group-item border-0 bg-light d-flex justify-content-between align-items-center">
-                    La Liga <span class="badge bg-secondary rounded-pill">ES</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <hr class="my-5 opacity-10">
-
-    <div class="row">
-        <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
-            <h3 class="fw-bold">📰 Trending News</h3>
-            <a href="{% url 'news_list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">Read More News</a>
-        </div>
-
-        {% for article in news %}
-        <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-sm h-100 news-card">
-                {% if article.image_url %}
-                <div class="ratio ratio-16x9">
-                    <img src="{{ article.image_url }}" class="card-img-top object-fit-cover" alt="News">
-                </div>
-                {% endif %}
-                <div class="card-body d-flex flex-column">
-                    <h6 class="fw-bold mb-2">
-                        <a href="{{ article.url }}" target="_blank" class="text-dark text-decoration-none stretched-link">
-                            {{ article.title|truncatechars:60 }}
-                        </a>
-                    </h6>
-                    <div class="mt-auto pt-2 border-top">
-                        <small class="text-muted" style="font-size: 0.75rem;">
-                            {{ article.source }} • {{ article.published_at|timesince }} ago
-                        </small>
+                <div class="card bg-dark text-white border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold">🧮 Smart Betting Tool</h5>
+                        <p class="small text-white-50 mb-3">Don't guess. Use the Kelly Criterion to calculate your exact stake size.</p>
+                        <a href="{% url 'tools' %}" class="btn btn-success w-100 fw-bold">Open Calculator</a>
                     </div>
                 </div>
+
+                <div class="card border-0 bg-light mb-4 d-flex align-items-center justify-content-center text-muted" style="height: 250px;">
+                    <small>Advertisement Space</small>
+                </div>
+
+                <div class="list-group shadow-sm border-0">
+                    <div class="list-group-item border-0 bg-white fw-bold">
+                        Top Leagues Covered
+                    </div>
+                    <div class="list-group-item border-0 bg-light d-flex justify-content-between align-items-center">
+                        Premier League <span class="badge bg-secondary rounded-pill">UK</span>
+                    </div>
+                    <div class="list-group-item border-0 bg-light d-flex justify-content-between align-items-center">
+                        La Liga <span class="badge bg-secondary rounded-pill">ES</span>
+                    </div>
+                </div>
+
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center text-muted">
-            No news loaded.
+
+        <hr class="my-5 opacity-10">
+
+        <div class="row">
+            <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+                <h3 class="fw-bold">📰 Trending News</h3>
+                <a href="{% url 'news_list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">Read More News</a>
+            </div>
+
+            {% for article in news %}
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100 news-card">
+                        {% if article.image_url %}
+                            <div class="ratio ratio-16x9">
+                                <img src="{{ article.image_url }}" class="card-img-top object-fit-cover" alt="News">
+                            </div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="fw-bold mb-2">
+                                <a href="{{ article.url }}" target="_blank" class="text-dark text-decoration-none stretched-link">
+                                    {{ article.title|truncatechars:60 }}
+                                </a>
+                            </h6>
+                            <div class="mt-auto pt-2 border-top">
+                                <small class="text-muted" style="font-size: 0.75rem;">
+                                    {{ article.source }} • {{ article.published_at|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center text-muted">
+                    No news loaded.
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
     </div>
-
-</div>
-
-<style>
-    .match-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .match-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-        border-left: 4px solid #0d6efd !important; /* Blue accent on hover */
-    }
-    .news-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
-    }
-    .object-fit-cover {
-        object-fit: cover;
-    }
-</style>
+    <script>
+        (function(oantl){
+            var d = document,
+                s = d.createElement('script'),
+                l = d.scripts[d.scripts.length - 1];
+            s.settings = oantl || {};
+            s.src = "\/\/givingequal.com\/c.Do9w6\/bK2l5DlFS\/W\/Qu9ONqjLc\/w-NEzpUhwyOCC\/0I2sNozuAI3\/N\/TBAD5O";
+            s.async = true;
+            s.referrerPolicy = 'no-referrer-when-downgrade';
+            l.parentNode.insertBefore(s, l);
+        })({})
+    </script>
+    <style>
+        .match-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            border-left: 4px solid #0d6efd !important; /* Blue accent on hover */
+        }
+        .news-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+        }
+        .object-fit-cover {
+            object-fit: cover;
+        }
+    </style>
 {% endblock %}
