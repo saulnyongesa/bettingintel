@@ -1,20 +1,46 @@
+from datetime import timedelta
+
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Q
+from django.utils import timezone
+
 from .models import Match, League, Tip
 
 
 def prediction_list(request):
-    """
-    Lists all upcoming matches ordered by date.
-    Good for the 'All Predictions' page.
-    """
-    matches = Match.objects.filter(status='scheduled') \
-        .select_related('league') \
-        .order_by('start_time')
+    # 1. Base Query: Future matches only
+    now = timezone.now()
+    matches = Match.objects.filter(status='scheduled', start_time__gt=now).select_related('league').order_by('start_time')
+
+    # 2. Filtering Logic
+    league_slug = request.GET.get('league')
+    date_filter = request.GET.get('date') # 'today', 'tomorrow'
+
+    if league_slug:
+        matches = matches.filter(league__slug=league_slug)
+
+    if date_filter == 'today':
+        end_of_day = now.replace(hour=23, minute=59)
+        matches = matches.filter(start_time__range=(now, end_of_day))
+    elif date_filter == 'tomorrow':
+        start_tomorrow = (now + timedelta(days=1)).replace(hour=0, minute=0)
+        end_tomorrow = (now + timedelta(days=1)).replace(hour=23, minute=59)
+        matches = matches.filter(start_time__range=(start_tomorrow, end_tomorrow))
+
+    # 3. Pagination (20 matches per page)
+    paginator = Paginator(matches, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # 4. Context Data
+    leagues = League.objects.annotate(match_count=Count('match')).filter(match_count__gt=0).order_by('-match_count')
 
     context = {
-        'matches': matches,
-        'page_title': 'All Football Betting Tips & Predictions'
+        'matches': page_obj,
+        'leagues': leagues,
+        'current_league': league_slug,
+        'current_date': date_filter
     }
     return render(request, 'predictions/match_list.html', context)
 
