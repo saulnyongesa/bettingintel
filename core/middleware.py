@@ -13,9 +13,9 @@ class RedirectDefaultDomainMiddleware:
         host = request.get_host()
 
         # Check if it's the default Heroku domain (adjust the exact name if needed)
-        if 'herokuapp.com' in host and host != 'bettingintel.online':  # Replace with your exact app name
+        if 'herokuapp.com' in host and host != 'www.bettingintel.online':  # Replace with your exact app name
             # Redirect to your custom domain
-            custom_domain = 'bettingintel.online'  # Your custom domain
+            custom_domain = 'www.bettingintel.online'  # Your custom domain
             # Build the full URL (preserve path and query params)
             redirect_url = f'https://{custom_domain}{request.get_full_path()}'
             return HttpResponsePermanentRedirect(redirect_url)
