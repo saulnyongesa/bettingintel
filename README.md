@@ -1,6 +1,5 @@
-============================================================
 BETTINGINTEL.ONLINE - Data-Driven Football Intelligence
-============================================================
+=========================================
 
 BettingIntel.Online is a Django-based data aggregation engine 
 designed to eliminate "gut-feeling" betting. It scrapes 
